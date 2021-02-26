@@ -1,20 +1,23 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import styles from '../styles/components/Countdown.module.css';
 import { FiCheck } from 'react-icons/fi'
+import { ChallengeContext } from '../contexts/ChallengesContext';
+
+let countdownTimeout: NodeJS.Timeout
 
 function Countdown() {
 
+  const { startNewChallenge } = useContext(ChallengeContext);
+
   const [time, setTime] = useState(0.05 * 60);
   const [isActive, setIsActive] = useState(false);
-
+  const [hasFinished, setHasFinished] = useState(false);
+  
   const minutes = Math.floor(time / 60)
   const seconds = time % 60
-
+  
   const [minutesLeft, minutesRight] = String(minutes).padStart(2, '0').split('')
   const [secondsLeft, secondsRight] = String(seconds).padStart(2, '0').split('')
-  const [hasFinished, setHasFinished] = useState(false);
-
-  let countdownTimeout: NodeJS.Timeout
 
   function startCountdown() {
     setIsActive(true);
@@ -35,6 +38,7 @@ function Countdown() {
     } else if (isActive && time === 0){
       setHasFinished(true);
       setIsActive(false);
+      startNewChallenge();
     }
   }, [time, isActive])
 
@@ -61,7 +65,7 @@ function Countdown() {
           >     
               Cliclo Encerrado
               <div className={styles.countdownCheck}>
-                <FiCheck size={15} color={'rgba(255, 255, 255)'} />
+                <FiCheck size={13} color={'rgba(255, 255, 255)'} />
               </div>
         </button>
       ) : (

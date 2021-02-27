@@ -1,48 +1,24 @@
 import { useContext, useEffect, useState } from 'react';
-import styles from '../styles/components/Countdown.module.css';
 import { FiCheck } from 'react-icons/fi'
 import { ChallengeContext } from '../contexts/ChallengesContext';
+import { CountdownContext } from '../contexts/CountdownContext';
 
-let countdownTimeout: NodeJS.Timeout
+import styles from '../styles/components/Countdown.module.css';
+
 
 function Countdown() {
 
-  const { startNewChallenge } = useContext(ChallengeContext);
+  const { 
+     minutes,
+     seconds,
+     hasFinished,
+     isActive, 
+     startCountdown, 
+     resetCountdown
+    } = useContext(CountdownContext);
 
-  const [time, setTime] = useState(0.05 * 60);
-  const [isActive, setIsActive] = useState(false);
-  const [hasFinished, setHasFinished] = useState(false);
-  
-  const minutes = Math.floor(time / 60)
-  const seconds = time % 60
-  
   const [minutesLeft, minutesRight] = String(minutes).padStart(2, '0').split('')
   const [secondsLeft, secondsRight] = String(seconds).padStart(2, '0').split('')
-
-  function startCountdown() {
-    setIsActive(true);
-  }
-
-  function resetCountdown() {
-    clearTimeout(countdownTimeout)
-    setIsActive(false);
-    setTime(0.05 * 60)
-  }
-
-
-  useEffect( () => {
-    if (time > 0 && isActive) {
-      countdownTimeout = setTimeout(() => {
-        setTime(time - 1)
-      }, 1000);
-    } else if (isActive && time === 0){
-      setHasFinished(true);
-      setIsActive(false);
-      startNewChallenge();
-    }
-  }, [time, isActive])
-
-  
 
 
   return (
@@ -63,7 +39,7 @@ function Countdown() {
           disabled
           className={styles.countdownButton}
           >     
-              Cliclo Encerrado
+              Ciclo Encerrado
               <div className={styles.countdownCheck}>
                 <FiCheck size={13} color={'rgba(255, 255, 255)'} />
               </div>
